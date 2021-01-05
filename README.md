@@ -13,3 +13,4 @@ Start the dev server,
 ```bash
 $ yarn start
 ```
+yarn create @umijs/umi-app
