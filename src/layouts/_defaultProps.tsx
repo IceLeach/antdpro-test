@@ -1,13 +1,17 @@
 import React from 'react';
-import { SmileOutlined, TabletOutlined, CrownOutlined } from '@ant-design/icons';
+import {
+  SmileOutlined,
+  TabletOutlined,
+  CrownOutlined,
+} from '@ant-design/icons';
 
-const IconMap={
+const IconMap = {
   smile: <SmileOutlined />,
   tablet: <TabletOutlined />,
   crown: <CrownOutlined />,
 };
 export default {
-  route:{
+  route: {
     path: '/',
     name: 'Blanc',
     routes: [
@@ -17,7 +21,7 @@ export default {
         icon: IconMap.smile,
       },
       {
-        path: '/welcome',
+        path: '/management',
         name: '管理页',
         icon: IconMap.crown,
         // access: 'canAdmin',
@@ -37,7 +41,7 @@ export default {
             exact: true,
           },
           {
-            path: '/admin/page3',
+            path: '/management/page3',
             name: 'page 3',
             icon: IconMap.crown,
             exact: true,
@@ -51,41 +55,19 @@ export default {
         // component: './ListTableList',
         routes: [
           {
-            path: '/list/sub-page',
-            name: '一级列表页面',
+            path: '/list/list1',
+            name: 'list 1',
             icon: <CrownOutlined />,
-            routes: [
-              {
-                path: 'sub-sub-page1',
-                name: '一一级列表页面',
-                icon: <CrownOutlined />,
-                component: './Welcome',
-              },
-              {
-                path: 'sub-sub-page2',
-                name: '一二级列表页面',
-                icon: <CrownOutlined />,
-                component: './Welcome',
-              },
-              {
-                path: 'sub-sub-page3',
-                name: '一三级列表页面',
-                icon: <CrownOutlined />,
-                component: './Welcome',
-              },
-            ],
           },
           {
-            path: '/list/sub-page2',
-            name: '二级列表页面',
+            path: '/list/list2',
+            name: 'list 2',
             icon: <CrownOutlined />,
-            component: './Welcome',
           },
           {
-            path: '/list/sub-page3',
-            name: '三级列表页面',
+            path: '/list/list3',
+            name: 'list 3',
             icon: <CrownOutlined />,
-            component: './Welcome',
           },
         ],
       },
@@ -94,8 +76,7 @@ export default {
   location: {
     pathname: '',
   },
-}
-  
+};
 
 // export default [
 //   {

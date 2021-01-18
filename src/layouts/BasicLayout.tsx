@@ -1,28 +1,81 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Avatar } from 'antd'
+import { Button, Avatar, Switch } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import ProLayout, { DefaultFooter, MenuDataItem, PageContainer, ProSettings } from '@ant-design/pro-layout';
+import ProLayout, {
+  DefaultFooter,
+  MenuDataItem,
+  PageContainer,
+  PageHeaderWrapper,
+} from '@ant-design/pro-layout';
 import defaultProps from './_defaultProps';
-import { history } from 'umi';
+import { history, Link, useDispatch } from 'umi';
+import { connect } from 'dva';
 
-export default (props: any) => {
-    const [setting,setSetting]=useState<Partial<ProSettings>|undefined>(undefined);
-    const [pathname,setPathname]=useState('/welcome');
-    const logo='https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
-    return(
-        <ProLayout 
-            {...defaultProps} 
-            location={{pathname}}
-            style={{height:'100vh'}}
-            fixSiderbar
-            onMenuHeaderClick={(e)=>console.log(e)}
-            menuItemRender={(item,dom)=><a onClick={()=>{console.log(item.path);setPathname(item.path||'/welcome');history.push(item.path?item.path.toString():'/')}}>{dom}</a>} 
-            rightContentRender={()=><div><Avatar shape='square' size='small' icon={<UserOutlined/>} /></div>}
-            title='Remax' 
-            logo={logo} 
-            footerRender={()=><DefaultFooter links={[]} copyright='BLANC' />}
+function mapStateToProps(state: any) {
+  const themeConfig: any = state['theme'];
+  // console.log(themeConfig);
+  return { themeConfig };
+}
+const BL = (props: any) => {
+  // const setting:any=theme.state;
+  const [collDef, setCollDef] = useState(true);
+  const [pathname, setPathname] = useState(window.location.pathname ?? '/');
+  const [collapsed, setCollapsed] = useState(true);
+  const logo =
+    'https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
+  const dispatch = useDispatch();
+  function themeChange(state: boolean) {
+    // dispatch({
+    //     type:'theme/changeTheme',
+    //     payload:{state},
+    // });
+    // const res=Promise.resolve(dispatch({
+    //     type:'theme/loadTheme',
+    // }))
+    // res.then((res)=>console.log(res));
+    // ce(1);
+  }
+  let pageName;
+  return (
+    <ProLayout
+      {...defaultProps}
+      // navTheme={'light'}
+      breadcrumbRender={(route: any) => [...route]}
+      collapsed={collapsed}
+      onCollapse={() => {
+        collDef ? setCollDef(false) : setCollapsed(!collapsed);
+      }}
+      location={{ pathname }}
+      style={{ height: '100vh' }}
+      fixSiderbar
+      onMenuHeaderClick={(e) => {
+        console.log(e);
+        setPathname('/');
+        history.push('/');
+      }}
+      menuItemRender={(item: any, dom) => (
+        <Link
+          to={item.path ?? '/'}
+          onClick={() => {
+            setPathname(item.path ?? '/');
+          }}
         >
-            <PageContainer content='欢迎使用'>{props.children}</PageContainer>
-        </ProLayout>
-    );
+          {dom}
+        </Link>
+      )}
+      rightContentRender={() => (
+        <>
+          <Switch onChange={(e) => themeChange(e)} />
+          <Avatar shape="square" size="small" icon={<UserOutlined />} />
+        </>
+      )}
+      title="Remax"
+      logo={logo}
+      footerRender={() => <DefaultFooter links={[]} copyright="BLANC" />}
+    >
+      <PageContainer>{props.children}</PageContainer>
+    </ProLayout>
+  );
 };
+
+export default connect(mapStateToProps)(BL);
