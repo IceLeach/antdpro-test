@@ -1,10 +1,10 @@
 import ProTable, { ProColumns } from '@ant-design/pro-table';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'antd';
 import type { PaginationProps } from 'antd/lib/pagination';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useDispatch } from 'umi';
-import request from 'umi-request';
+import { useDispatch, useSelector } from 'umi';
+import { connect } from 'dva';
 
 interface userTypes {
   key: number;
@@ -15,22 +15,21 @@ interface userTypes {
   state?: 'Activated' | 'Inactivated';
   lastLoginDateTime?: string | null;
 }
-
-const users: userTypes[] = [];
-users.push({
-  key: 1,
-  id: '#001',
-  name: 'user01',
-  nickName: 'u1',
-  state: 'Activated',
-});
-users.push({
-  key: 2,
-  id: '#002',
-  name: 'user02',
-  nickName: 'u2',
-  state: 'Inactivated',
-});
+// const users: userTypes[] = [];
+// users.push({
+//   key: 1,
+//   id: '#001',
+//   name: 'user01',
+//   nickName: 'u1',
+//   state: 'Activated',
+// });
+// users.push({
+//   key: 2,
+//   id: '#002',
+//   name: 'user02',
+//   nickName: 'u2',
+//   state: 'Inactivated',
+// });
 const columns: ProColumns<userTypes>[] = [
   {
     title: '用户ID',
@@ -70,60 +69,39 @@ const columns: ProColumns<userTypes>[] = [
     render: () => [<a key={1}>详细</a>, <a key={2}>标记</a>],
   },
 ];
-const fetchData = async (url: string) => {
-  // const res=await fetch(url,{
-  //     method:'GET'
-  // });
-  // return res.json();
-  const res = await request(url, {
-    method: 'get',
-  });
-  return res;
-};
-const UserTable = () => {
-  // const dispatch=useDispatch();
-  // const fetchData=async (data: IDataIndexSource) => {
-  //     const res = await dispatch({
-  //         type: 'admin/fetchAdminGet',
-  //         payload: {
-  //             Name: data.name ?? null, // `null` means unchanged
-  //             NickName: data.nickName ?? null,
-  //             Email: data.email ?? null,
-  //             State: (data.state as 'Activated' | 'Inactivated') ?? null,
-  //             SkipCount: (data.pageSize ?? 0) * ((data.current ?? 1) - 1),
-  //             MaxResultCount: data.pageSize,
-  //             Sorting: `${nameof(data, 'id')} desc`,
-  //         },
-  //     });
-  //     // console.log('res',res);
-  //     return {
-  //         data: res?.items ?? [],
-  //         total: res?.totalCount ?? 0,
-  //         success: true,
-  //     };
-  // };
+// const namespace='admin'
+// function mapStateToProps(state:any) {
+//   const ue:any=state[namespace].user;
+//   // console.log('m-sta',ue);
+//   return {ue};
+// }
+const UserTable: React.FC = (props) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: any) => state.admin);
+
+  useEffect(() => {
+    dispatch({ type: 'admin/fetchUserGet', payload: {} });
+  }, []);
+
+  console.log(user);
 
   return (
     // <PageContainer>
     <>
       <ProTable
         columns={columns}
-        request={(_) => Promise.resolve({ data: users, success: true })}
+        request={() =>
+          Promise.resolve({
+            data: user,
+            success: true,
+          })
+        }
         // request={fetchData}
       />
-      <Button
-        onClick={async () => {
-          const res = await fetchData(
-            'http://jsonplaceholder.typicode.com/posts/1',
-          );
-          console.log(res);
-        }}
-      >
-        Click
-      </Button>
+      <Button>Click</Button>
     </>
     // </PageContainer>
   );
 };
-
+// export default connect(mapStateToProps)(UserTable);
 export default UserTable;
