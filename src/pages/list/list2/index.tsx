@@ -118,7 +118,7 @@ const UserTable = (props: { user: any }) => {
   useEffect(() => {
     dispatch({ type: 'admin/fetchUserGet', payload: {} });
   }, [flag]);
-  const { user } = useSelector((state) => state['admin']);
+  const { user } = useSelector((state: any) => state.admin);
   // const getUser=async()=>{
   //   await dispatch({
   //     type:'admin/fetchUserGet',
