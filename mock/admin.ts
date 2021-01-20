@@ -1,5 +1,3 @@
-import { useRequest } from 'umi';
-
 const notice = [
   {
     setup: 'What is the object oriented way to get wealthy?',
@@ -33,4 +31,10 @@ const users = [
 export default {
   'get /dev/posts': notice,
   'get /dev/users': users,
+  'post /dev/users': function (req: any, res: any) {
+    console.log(req.body);
+    setTimeout(() => {
+      res.send('ok');
+    }, 2000);
+  },
 };

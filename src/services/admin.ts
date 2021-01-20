@@ -12,3 +12,10 @@ export async function UserGet() {
     method: 'get',
   });
 }
+
+export async function UserPost(data: any) {
+  return request('/dev/users', {
+    method: 'post',
+    data,
+  });
+}
