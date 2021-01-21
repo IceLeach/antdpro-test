@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Modal, Form, Input, Radio } from 'antd';
 import { useState } from 'react';
 import { userTypes } from '../index';
 import { UserPost } from '../../../../services/admin';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+// import '~antd/lib/style/themes/default.less';
+// import '~antd/dist/antd.less';
+import './UModal.less';
 
 interface UModalProps {
   close: () => void;
@@ -12,7 +16,25 @@ const UModal: React.FC<UModalProps> = (props) => {
   const { close, record } = props;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const dRef: any = useRef();
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+  });
+  const [disabled, setDisabled] = useState(true);
   let res;
+  const onStart = (event: DraggableEvent, uiData: DraggableData) => {
+    const { clientWidth, clientHeight } = window?.document?.documentElement;
+    const targetRect = dRef?.current?.getBoundingClientRect();
+    setBounds({
+      left: -targetRect?.left + uiData?.x,
+      right: clientWidth - (targetRect?.right - uiData?.x),
+      top: -targetRect?.top + uiData?.y,
+      bottom: clientHeight - (targetRect?.bottom - uiData?.y),
+    });
+  };
   useEffect(() => {
     form.setFieldsValue({
       nickName: record?.nickName,
@@ -21,6 +43,31 @@ const UModal: React.FC<UModalProps> = (props) => {
   }, []);
   return (
     <Modal
+      title={
+        <div
+          style={{
+            // cursor: 'move',
+            userSelect: 'none',
+            padding: '16px 0',
+          }}
+          onMouseOver={() => {
+            if (disabled) {
+              setDisabled(false);
+            }
+          }}
+          onMouseOut={() => {
+            setDisabled(true);
+          }}
+          // fix eslintjsx-a11y/mouse-events-have-key-events
+          // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
+          onFocus={() => {}}
+          onBlur={() => {}}
+          // end
+        >
+          详细
+        </div>
+      }
+      // className={styles.antModel}
       visible
       confirmLoading={loading}
       okText="提交"
@@ -40,6 +87,15 @@ const UModal: React.FC<UModalProps> = (props) => {
         });
       }}
       onCancel={() => close()}
+      modalRender={(modal) => (
+        <Draggable
+          disabled={disabled}
+          bounds={bounds}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
+          <div ref={dRef}>{modal}</div>
+        </Draggable>
+      )}
     >
       <Form form={form} style={{ paddingTop: '25px' }}>
         <Form.Item label="昵称" name="nickName">

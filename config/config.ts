@@ -19,6 +19,8 @@ export default defineConfig({
   },
   theme: {
     // 'primary-color': '#1DA57A',
+    // 'modal-header-padding-vertical':'0',
+    // 'modal-header-padding-horizontal':'0',
   },
   routes: routes,
   //define: {},

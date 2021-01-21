@@ -27,6 +27,7 @@
     "@ant-design/pro-table": "^2.19.1",
     "@ant-design/pro-utils": "^1.7.0",
     "@umijs/preset-react": "1.x",
+    "react-draggable": "^4.4.3",
     "umi": "^3.3.3"
   },
   "devDependencies": {
