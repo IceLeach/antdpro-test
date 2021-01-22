@@ -42,7 +42,10 @@ const UserTable: React.FC = (props) => {
   const dispatch = useDispatch();
   const [showDetailModel, setDetailModel] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<userTypes>();
-  const { user } = useSelector((state: any) => state.admin);
+  const {
+    admin: { user },
+  } = useSelector((state: any) => state);
+
   const columns: ProColumns<userTypes>[] = [
     {
       title: '用户ID',
@@ -83,7 +86,7 @@ const UserTable: React.FC = (props) => {
         <a
           key={1}
           onClick={() => {
-            console.log(record);
+            // console.log(record);
             setCurrentRecord(record);
             setDetailModel(true);
           }}

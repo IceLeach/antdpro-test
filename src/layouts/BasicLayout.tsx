@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Avatar, Switch } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons';
 import ProLayout, {
   DefaultFooter,
   MenuDataItem,
@@ -8,22 +12,29 @@ import ProLayout, {
   PageHeaderWrapper,
 } from '@ant-design/pro-layout';
 import defaultProps from './_defaultProps';
-import { history, Link, useDispatch } from 'umi';
+import { history, Link, useDispatch, useSelector } from 'umi';
 import { connect } from 'dva';
+// import { setSider } from '../pages/list/list1/components/UModal';
 
 function mapStateToProps(state: any) {
   const themeConfig: any = state['theme'];
   // console.log(themeConfig);
   return { themeConfig };
 }
+
+let siderWidth = 48;
+
 const BL = (props: any) => {
   // const setting:any=theme.state;
   const [collDef, setCollDef] = useState(true);
   const [pathname, setPathname] = useState(window.location.pathname ?? '/');
-  const [collapsed, setCollapsed] = useState(true);
+  // const [collapsed, setCollapsed] = useState(true);
+  // const [n, setN] = useState(0)
   const logo =
     'https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
   const dispatch = useDispatch();
+  const siderWidth = useSelector((state: any) => state.theme.siderWidth);
+
   function themeChange(state: boolean) {
     // dispatch({
     //     type:'theme/changeTheme',
@@ -35,15 +46,44 @@ const BL = (props: any) => {
     // res.then((res)=>console.log(res));
     // ce(1);
   }
-  let pageName;
   return (
     <ProLayout
       {...defaultProps}
+      // collapsedButtonRender={(collapsed)=>{
+      //   if(collapsed){
+      //     // onClick={()=>{siderWidth=208;setSider(208);}}
+      //     // return <MenuUnfoldOutlined  onClick={()=>{dispatch({
+      //     //   type: 'theme/setSider',
+      //     //   payload: 208
+      //     // })}}/>
+      //     return <MenuUnfoldOutlined />
+      //   }else{
+      //     // siderWidth=48;setSider(48);
+      //     // return <MenuFoldOutlined onClick={()=>{dispatch({
+      //     //   type: 'theme/setSider',
+      //     //   payload: 48
+      //     // })}}/>
+      //     return <MenuFoldOutlined />
+      //   }
+      // }}
       // navTheme={'light'}
       breadcrumbRender={(route: any) => [...route]}
-      collapsed={collapsed}
-      onCollapse={() => {
-        collDef ? setCollDef(false) : setCollapsed(!collapsed);
+      collapsed={siderWidth === 48}
+      // collapsed={collapsed}
+      // defaultCollapsed={true}
+      onCollapse={(bool) => {
+        if (collDef) {
+          setCollDef(false);
+          dispatch({
+            type: 'theme/setSider',
+            payload: 48,
+          });
+          return;
+        }
+        dispatch({
+          type: 'theme/setSider',
+          payload: bool ? 48 : 208,
+        });
       }}
       location={{ pathname }}
       style={{ height: '100vh' }}

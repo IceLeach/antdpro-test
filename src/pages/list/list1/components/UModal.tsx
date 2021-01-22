@@ -4,19 +4,26 @@ import { useState } from 'react';
 import { userTypes } from '../index';
 import { UserPost } from '../../../../services/admin';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-// import '~antd/lib/style/themes/default.less';
-// import '~antd/dist/antd.less';
 import './UModal.less';
+import { useSelector } from 'umi';
 
 interface UModalProps {
   close: () => void;
   record?: userTypes;
 }
+// let siderWidth=48;
+
+// const setSider=(width: number)=>{
+//   console.log('sw',width);
+//   siderWidth=width;
+// }
+
 const UModal: React.FC<UModalProps> = (props) => {
   const { close, record } = props;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const dRef: any = useRef();
+  const siderWidth = useSelector((state: any) => state.theme.siderWidth);
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -24,23 +31,34 @@ const UModal: React.FC<UModalProps> = (props) => {
     right: 0,
   });
   const [disabled, setDisabled] = useState(true);
+
   let res;
   const onStart = (event: DraggableEvent, uiData: DraggableData) => {
-    const { clientWidth, clientHeight } = window?.document?.documentElement;
+    // console.log('uiData',uiData);
+    // console.log('bounds',bounds);
+    console.log('sider', siderWidth);
+    const { clientWidth, clientHeight } = window.document.documentElement;
     const targetRect = dRef?.current?.getBoundingClientRect();
+    // console.log('target',targetRect);
     setBounds({
-      left: -targetRect?.left + uiData?.x,
+      left: -targetRect?.left + uiData?.x + siderWidth,
       right: clientWidth - (targetRect?.right - uiData?.x),
       top: -targetRect?.top + uiData?.y,
       bottom: clientHeight - (targetRect?.bottom - uiData?.y),
     });
   };
+
   useEffect(() => {
     form.setFieldsValue({
       nickName: record?.nickName,
       state: record?.state,
     });
   }, []);
+
+  // useEffect(() => {
+  //   console.log(siderWidth)
+  // }, [siderWidth])
+
   return (
     <Modal
       title={
@@ -58,11 +76,8 @@ const UModal: React.FC<UModalProps> = (props) => {
           onMouseOut={() => {
             setDisabled(true);
           }}
-          // fix eslintjsx-a11y/mouse-events-have-key-events
-          // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
           onFocus={() => {}}
           onBlur={() => {}}
-          // end
         >
           详细
         </div>
@@ -112,4 +127,5 @@ const UModal: React.FC<UModalProps> = (props) => {
   );
 };
 
+// export{ setSider };
 export default UModal;
