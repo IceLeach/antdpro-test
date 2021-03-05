@@ -3,6 +3,7 @@ export default {
   state: {
     dark: false,
     siderWidth: 48,
+    type: 'E',
   },
   effects: {
     *loadTheme(_: any, { call, put, select }: any) {
@@ -17,6 +18,9 @@ export default {
     },
     setSider(state: any, { payload }: any) {
       return { ...state, siderWidth: payload };
+    },
+    setType(state: any, { payload }: any) {
+      return { ...state, type: payload };
     },
   },
 };

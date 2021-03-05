@@ -34,7 +34,9 @@ const BL = (props: any) => {
     'https://gw.alipayobjects.com/mdn/rms_b5fcc5/afts/img/A*1NHAQYduQiQAAAAAAAAAAABkARQnAQ';
   const dispatch = useDispatch();
   const siderWidth = useSelector((state: any) => state.theme.siderWidth);
-
+  useEffect(() => {
+    // console.log(props.router);
+  });
   function themeChange(state: boolean) {
     // dispatch({
     //     type:'theme/changeTheme',
@@ -48,7 +50,8 @@ const BL = (props: any) => {
   }
   return (
     <ProLayout
-      {...defaultProps}
+      // {...defaultProps}
+      {...props.router}
       // collapsedButtonRender={(collapsed)=>{
       //   if(collapsed){
       //     // onClick={()=>{siderWidth=208;setSider(208);}}
@@ -67,7 +70,7 @@ const BL = (props: any) => {
       //   }
       // }}
       // navTheme={'light'}
-      breadcrumbRender={(route: any) => [...route]}
+      breadcrumbRender={() => undefined}
       collapsed={siderWidth === 48}
       // collapsed={collapsed}
       // defaultCollapsed={true}

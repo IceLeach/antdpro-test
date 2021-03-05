@@ -144,7 +144,8 @@ function Hello() {
       />
       <Button
         onClick={() => {
-          history.push('/welcome');
+          // history.push('/welcome');
+          history.push('/list/list1');
         }}
       >
         To Square
